@@ -45,7 +45,7 @@ def register(request):
 
     except Exception as e:
         print(e)
-        return ApiHelper.response_error()
+        return ApiHelper.response_error(e)
 
 
 @api_view(['POST'])
@@ -59,7 +59,7 @@ def login(request):
 
         user = authenticate(request, username=username, password=password)
         if not user:
-            return ApiHelper.response_err('Tên đăng nhập hoặc mật khẩu không đúng')
+            return ApiHelper.response_error('Tên đăng nhập hoặc mật khẩu không đúng')
 
         token,_ = Token.objects.get_or_create(user=user)
         return ApiHelper.response_ok({
@@ -68,4 +68,4 @@ def login(request):
 
     except Exception as e:
         print(e)
-        return ApiHelper.response_error()
+        return ApiHelper.response_error(e)

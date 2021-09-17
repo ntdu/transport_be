@@ -28,5 +28,8 @@ class ApiHelper:
         }) 
     
     @staticmethod
-    def response_error():
-        return HttpResponse(status=500)
+    def response_error(data):
+        return return JsonResponse({
+            'code': 500,
+            'data': data
+        }) 
