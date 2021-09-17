@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from datetime import datetime as dt_class
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 
 from apiHelper.apiHelper import ApiHelper
 from customer.models import Customer
@@ -42,15 +43,29 @@ def register(request):
             'token': token.key,
         })
 
-        # form =  ApiHelper.getData(request)
-        
-        # password = form['password']
-        
-        # user = User.objects.filter(username=request.user.username).first()
-        # user.set_password(password)   
-        # user.save()
+    except Exception as e:
+        print(e)
+        return ApiHelper.response_error()
 
-        # return ApiHelper.Response_ok('ok')
+
+@api_view(['POST'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+def login(request):  
+    try:
+        form = ApiHelper.getData(request)
+        username = form['username']
+        password = form['password']
+
+        user = authenticate(request, username=username, password=password)
+        if not user:
+            return ApiHelper.response_err('Tên đăng nhập hoặc mật khẩu không đúng')
+
+        token,_ = Token.objects.get_or_create(user=user)
+        return ApiHelper.response_ok({
+            'token': token.key
+        })
+
     except Exception as e:
         print(e)
         return ApiHelper.response_error()
