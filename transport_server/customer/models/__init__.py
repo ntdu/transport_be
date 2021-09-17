@@ -1,1 +1,1 @@
-from . import models_user
+from .models_user import *

@@ -7,26 +7,26 @@ class ApiHelper:
         return json.loads(request.body.decode('utf-8'))
 
     @staticmethod
-    def Response_ok(data):
+    def response_ok(data):
         return JsonResponse({
             'code': 200,
             'data': data
         })
 
     @staticmethod
-    def Response_info(data):
+    def response_info(data):
         return JsonResponse({
             'code': 100,
             'data': data
         })
 
     @staticmethod
-    def Response_client_error(data):
+    def response_client_error(data):
         return JsonResponse({
             'code': 400,
             'data': data
         }) 
     
     @staticmethod
-    def Response_error():
+    def response_error():
         return HttpResponse(status=500)
