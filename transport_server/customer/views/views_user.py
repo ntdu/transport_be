@@ -4,7 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from apiHelper.apiHelper import ApiHelper
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 # @authentication_classes([TokenAuthentication])
 # @permission_classes([IsAuthenticated])
 def register(request):  
