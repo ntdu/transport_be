@@ -12,7 +12,8 @@ def index(request):
 
 def room(request, room_name):
 
-    socket_url = 'wss://' if request.is_secure() else 'ws://'
+    # socket_url = 'wss://' if request.is_secure() else 'ws://'
+    socket_url = 'wss://'
     socket_url += request.META['HTTP_HOST'] + '/ws/chat/' + room_name + '/'
 
     return render(request, 'chat/room.html', {
