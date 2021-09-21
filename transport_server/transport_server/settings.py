@@ -95,8 +95,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-            # "hosts": [('dev.tnt-trading.vip', 6379)],
+            # "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [('dev.tnt-trading.vip', 6379)],
             # "hosts": [("127.0.0.1", 6379)],
         },
     },
@@ -114,8 +114,8 @@ CHANNEL_LAYERS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        # "LOCATION": [('dev.tnt-trading.vip', 6379)],
+        # "LOCATION": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        "LOCATION": [('dev.tnt-trading.vip', 6379)],
         # "LOCATION": [("127.0.0.1", 6379)],
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
