@@ -62,9 +62,12 @@ def login(request):
             return ApiHelper.response_error('Tên đăng nhập hoặc mật khẩu không đúng')
 
         token,_ = Token.objects.get_or_create(user=user)
-        return ApiHelper.response_ok({
+        return JsonResponse({
             'token': token.key
-        })
+        }) 
+        # return ApiHelper.response_ok({
+        #     'token': token.key
+        # })
 
     except Exception as e:
         print(e)
