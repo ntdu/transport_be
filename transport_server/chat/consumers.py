@@ -34,7 +34,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         from rest_framework.authtoken.models import Token
-        from chat.models import CustomerReady
+        from chat.models import CustomerReady, DestinationInfo
         from customer.models import Customer
 
         text_data_json = json.loads(text_data)
@@ -63,6 +63,12 @@ class ChatConsumer(WebsocketConsumer):
             origin_lat = data['coordinates']['origin']['lat']
             origin_address = data['address']['origin']
             
+            phone = data['receiver']['phone']
+            name = data['receiver']['name']
+            destination_lng = data['coordinates']['destination']['lng']
+            destination_lat = data['coordinates']['destination']['lat']
+            destination_address = data['address']['destination']
+            destination_address = data['package']['weight']
 
             customer_ready = CustomerReady(
                 customer = customer,
@@ -71,6 +77,17 @@ class ChatConsumer(WebsocketConsumer):
                 origin_address = origin_address
             )
             customer_ready.save()
+
+            destination_info = DestinationInfo(
+                customer_ready = customer_ready,
+                phone = phone,
+                name = name,
+                destination_lng = destination_lng,
+                destination_lat = destination_lat,
+                destination_address = destination_address,
+                weight = weight
+            )
+            destination_info.save()
 
             message = customer.first_name
             async_to_sync(self.channel_layer.group_send)(
