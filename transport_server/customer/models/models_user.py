@@ -17,3 +17,6 @@ class Customer(models.Model):
     
     def __str__(self):
         return self.first_name
+    
+    def display_date_of_birth(self):
+        return self.date_of_birth.strftime("%m/%d/%Y")

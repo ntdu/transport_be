@@ -101,7 +101,7 @@ class ChatConsumer(WebsocketConsumer):
                 'userDetail': {
                     'accountUsername': driver_online.display_fullname(),
                     'address': driver_online.customer.address,
-                    'dateOfBirth': driver_online.customer.date_of_birth,
+                    'dateOfBirth': driver_online.customer.display_date_of_birth(),
                     'firstName': driver_online.customer.first_name,
                     'gender': driver_online.customer.female,
                     'lastName': driver_online.customer.last_name,
