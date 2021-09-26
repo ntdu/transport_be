@@ -34,7 +34,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         from rest_framework.authtoken.models import Token
-        from chat.models import CustomerReady, DestinationInfo
+        from chat.models import CustomerReady, DestinationInfo, DriverOnline
         from customer.models import Customer
 
         text_data_json = json.loads(text_data)
