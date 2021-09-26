@@ -2,8 +2,8 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from rest_framework.authtoken.models import Token
-from chat.models import *
+# from rest_framework.authtoken.models import Token
+# from chat.models import *
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -33,6 +33,9 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
+        from rest_framework.authtoken.models import Token
+        from chat.models import CustomerReady
+
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
 
