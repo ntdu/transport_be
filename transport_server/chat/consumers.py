@@ -53,7 +53,7 @@ class ChatConsumer(WebsocketConsumer):
         elif type == 'DELIVERY_BOOKING':
             token = text_data_json['message']['token']
             customer = Token.objects.get(key=token).user.customer_set.all().first()
-
+            print(customer)
             data = text_data_json['message']['data']
             origin_lng = data['coordinates']['origin']['lng']
             origin_lat = data['coordinates']['origin']['lng']
