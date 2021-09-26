@@ -68,7 +68,7 @@ class ChatConsumer(WebsocketConsumer):
             destination_lng = data['coordinates']['destination']['lng']
             destination_lat = data['coordinates']['destination']['lat']
             destination_address = data['address']['destination']
-            destination_address = data['package']['weight']
+            weight = data['package']['weight']
 
             customer_ready = CustomerReady(
                 customer = customer,
