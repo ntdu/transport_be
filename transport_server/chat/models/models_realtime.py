@@ -37,3 +37,6 @@ class DriverOnline(models.Model):
 
     def __str__(self):
         return f'{self.customer.login_account.username} - {self.created_date.strftime("%m/%d/%Y, %H:%M:%S")}'
+    
+    def display_fullname(self):
+        return f'{self.customer.last_name} {self.customer.first_name}'

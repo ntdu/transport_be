@@ -90,11 +90,24 @@ class ChatConsumer(WebsocketConsumer):
 
             driver_online = DriverOnline.objects.all().first()
 
+            phone = driver_online.customer.login_account.username
             loc_customer = (origin_lng, origin_lat)
             loc_driver = (driver_online.longitude, driver_online.latitude)
             distance = hs.haversine(loc_customer,loc_driver)
 
-            message = distance
+            message = {
+                'phone': phone,
+                'distance': distance,
+                'userDetail': {
+                    'accountUsername': display_fullname,
+                    'address': driver_online.customer.address,
+                    'dateOfBirth': driver_online.customer.date_of_birth,
+                    'firstName': driver_online.customer.first_name,
+                    'gender': driver_online.customer.female,
+                    'lastName': driver_online.customer.last_name,
+                    'phoneNumber': phone
+                }
+            }
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
