@@ -53,11 +53,8 @@ class ChatConsumer(WebsocketConsumer):
 
         elif type == 'DELIVERY_BOOKING':
             token = text_data_json['message']['token']
-            print("Token: " + str(token))
-            print(Token.objects.get(key=token).user)
             customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
             
-            print(customer)
             data = text_data_json['message']['data']
             origin_lng = data['coordinates']['origin']['lng']
             origin_lat = data['coordinates']['origin']['lat']
@@ -109,9 +106,36 @@ class ChatConsumer(WebsocketConsumer):
             #     'lastName'
             #     'phoneNumber'
             # }
+        
+        elif type == 'BIKER_WAITING':
+            token = text_data_json['message']['token']
+            customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
 
+            data = text_data_json['message']['data']
+            longitude = data['coordinates']['longitude']
+            latitude = data['coordinates']['latitude']
 
+            driver_online = DriverOnline.objects.filter(customer=customer).first()
+            if driver_online:
+                driver_online.longitude = longitude
+                driver_online.longitude = longitude
+                driver_online.save()
+            else:
+                driver_online = DriverOnline(
+                    customer = customer,
+                    longitude = longitude,
+                    latitude = latitude
+                )
+                driver_online.save()
 
+            message = 'BIKER_WAITING_SUCCESS'
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
 
 
 

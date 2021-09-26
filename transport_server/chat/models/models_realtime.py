@@ -6,6 +6,7 @@ from customer.models import *
 
 class CustomerReady(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
     origin_lng = models.DecimalField(default=0, max_digits=9, decimal_places=6) 
     origin_lat = models.DecimalField(default=0, max_digits=9, decimal_places=6) 
     origin_address = models.TextField() 
@@ -26,3 +27,13 @@ class DestinationInfo(models.Model):
 
     def __str__(self):
         return f'{self.phone} - {self.name}'
+
+class DriverOnline(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
+    longitude = models.DecimalField(default=0, max_digits=9, decimal_places=6) 
+    latitude = models.DecimalField(default=0, max_digits=9, decimal_places=6) 
+    created_date = models.DateTimeField(default=tz.now)
+
+    def __str__(self):
+        return f'{self.customer.login_account.username} - {self.created_date.strftime("%m/%d/%Y, %H:%M:%S")}'
