@@ -35,6 +35,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         from rest_framework.authtoken.models import Token
         from chat.models import CustomerReady
+        from customer.models import Customer
 
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
@@ -54,7 +55,8 @@ class ChatConsumer(WebsocketConsumer):
             token = text_data_json['message']['token']
             print("Token: " + str(token))
             print(Token.objects.get(key=token).user)
-            customer = Token.objects.get(key=token).user.customer_set.all().first()
+            customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+            
             print(customer)
             data = text_data_json['message']['data']
             origin_lng = data['coordinates']['origin']['lng']
