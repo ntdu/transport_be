@@ -2,6 +2,8 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from rest_framework.authtoken.models import Token
+from chat.models import *
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -46,7 +48,24 @@ class ChatConsumer(WebsocketConsumer):
             )
 
         elif type == 'DELIVERY_BOOKING':
-            message = text_data_json['message']['token']
+            token = text_data_json['message']['token']
+            customer = Token.objects.get(key=token).user.customer_set.all().first()
+
+            data = text_data_json['message']['data']
+            origin_lng = data['coordinates']['origin']['lng']
+            origin_lat = data['coordinates']['origin']['lng']
+            origin_address = data['address']['origin']
+            
+
+            customer_ready = CustomerReady(
+                customer = customer,
+                origin_lng = origin_lng,
+                origin_lat = origin_lat,
+                origin_address = origin_address
+            )
+            customer_ready.save()
+
+            message = customer.first_name
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
@@ -54,6 +73,25 @@ class ChatConsumer(WebsocketConsumer):
                     'message': message
                 }
             )
+
+            # 'phone':
+            # 'distance':
+            # 'userDetail': {
+            #     'accountUsername'
+            #     'address'
+            #     'dateOfBirth'
+            #     'firstName'
+            #     'gender'
+            #     'lastName'
+            #     'phoneNumber'
+            # }
+
+
+
+
+
+
+
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']

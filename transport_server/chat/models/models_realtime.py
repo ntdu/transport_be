@@ -11,6 +11,9 @@ class CustomerReady(models.Model):
     origin_address = models.TextField() 
     created_date = models.DateTimeField(default=tz.now)
 
+    def __str__(self):
+        return f'{self.customer.login_account.username}'
+
 class DestinationInfo(models.Model):
     customer_ready = models.ForeignKey(CustomerReady, on_delete=models.CASCADE)
 
@@ -21,3 +24,5 @@ class DestinationInfo(models.Model):
     destination_address = models.TextField()
     weight = models.DecimalField(default=0, max_digits=9, decimal_places=2)
 
+    def __str__(self):
+        return f'{self.phone} - {self.name}'
