@@ -36,7 +36,9 @@ class ChatConsumer(WebsocketConsumer):
         from rest_framework.authtoken.models import Token
         from chat.models import CustomerReady, DestinationInfo, DriverOnline
         from customer.models import Customer
+        import haversine as hs
 
+        
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
 
@@ -86,7 +88,13 @@ class ChatConsumer(WebsocketConsumer):
             )
             destination_info.save()
 
-            message = customer.first_name
+            driver_online = DriverOnline.objects.all().first()
+
+            loc_customer = (origin_lng, origin_lat)
+            loc_driver = (driver_online.longitude, driver_online.latitude)
+            distance = hs.haversine(loc_customer,loc_driver)
+
+            message = distance
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
