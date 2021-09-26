@@ -60,7 +60,7 @@ class ChatConsumer(WebsocketConsumer):
             print(customer)
             data = text_data_json['message']['data']
             origin_lng = data['coordinates']['origin']['lng']
-            origin_lat = data['coordinates']['origin']['lng']
+            origin_lat = data['coordinates']['origin']['lat']
             origin_address = data['address']['origin']
             
 
