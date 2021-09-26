@@ -99,7 +99,7 @@ class ChatConsumer(WebsocketConsumer):
                 'phone': phone,
                 'distance': distance,
                 'userDetail': {
-                    'accountUsername': display_fullname,
+                    'accountUsername': driver_online.display_fullname(),
                     'address': driver_online.customer.address,
                     'dateOfBirth': driver_online.customer.date_of_birth,
                     'firstName': driver_online.customer.first_name,
