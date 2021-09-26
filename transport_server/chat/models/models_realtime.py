@@ -12,7 +12,7 @@ class CustomerReady(models.Model):
     created_date = models.DateTimeField(default=tz.now)
 
     def __str__(self):
-        return f'{self.customer.login_account.username} - {created_date.strftime("%m/%d/%Y, %H:%M:%S")}'
+        return f'{self.customer.login_account.username} - {self.created_date.strftime("%m/%d/%Y, %H:%M:%S")}'
 
 class DestinationInfo(models.Model):
     customer_ready = models.ForeignKey(CustomerReady, on_delete=models.CASCADE)
