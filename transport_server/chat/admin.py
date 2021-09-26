@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(CustomerReady)
 admin.site.register(DestinationInfo)
+admin.site.register(DriverOnline)
