@@ -52,6 +52,8 @@ class ChatConsumer(WebsocketConsumer):
 
         elif type == 'DELIVERY_BOOKING':
             token = text_data_json['message']['token']
+            print("Token: " + str(token))
+            print(Token.objects.get(key=token).user)
             customer = Token.objects.get(key=token).user.customer_set.all().first()
             print(customer)
             data = text_data_json['message']['data']
