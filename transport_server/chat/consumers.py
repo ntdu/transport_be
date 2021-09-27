@@ -95,20 +95,23 @@ class ChatConsumer(WebsocketConsumer):
             loc_driver = (driver_online.longitude, driver_online.latitude)
             distance = hs.haversine(loc_customer,loc_driver)
 
-            message = {
-                'phone': phone,
-                'distance': distance,
-                'userDetail': {
-                    'email': driver_online.customer.email,
-                    'address': driver_online.customer.address,
-                    'date_of_birth': driver_online.customer.display_date_of_birth(),
-                    'first_name': driver_online.customer.first_name,
-                    'female': driver_online.customer.female,
-                    'last_name': driver_online.customer.last_name,
-                    'phone_number': phone,
-                    'created_date': driver_online.customer.display_created_date(),
+            message =  [
+                {
+                    'phone': phone,
+                    'distance': distance,
+                    'userDetail': {
+                        'email': driver_online.customer.email,
+                        'address': driver_online.customer.address,
+                        'date_of_birth': driver_online.customer.display_date_of_birth(),
+                        'first_name': driver_online.customer.first_name,
+                        'female': driver_online.customer.female,
+                        'last_name': driver_online.customer.last_name,
+                        'phone_number': phone,
+                        'created_date': driver_online.customer.display_created_date(),
+                    }
                 }
-            }
+            ]
+            
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
