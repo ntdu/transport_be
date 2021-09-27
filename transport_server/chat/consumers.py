@@ -19,10 +19,15 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
         # Send message to WebSocket
+        # self.send(text_data=json.dumps({
+        #     'message': '\n...Đã kết nối'
+        # }))
         self.send(text_data=json.dumps({
-            'message': '\n...Đã kết nối'
+            'message': {
+                'type': 'ready',
+                'data': '\n...Đã kết nối'
+            }
         }))
-
 
     def disconnect(self, close_code):
         # Leave room group
@@ -156,7 +161,11 @@ class ChatConsumer(WebsocketConsumer):
                 )
                 driver_online.save()
 
-            message = 'BIKER_WAITING_SUCCESS'
+            message = {
+                'type': 'BIKER_WAITING_SUCCESS',
+                'data': 'Success'
+            }
+
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
@@ -173,7 +182,10 @@ class ChatConsumer(WebsocketConsumer):
             biker = data['biker']
             price = data['price']
 
-            message = price
+            message = {
+                'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
+                'data': price
+            }
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
