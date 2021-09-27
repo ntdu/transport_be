@@ -150,7 +150,7 @@ class ChatConsumer(WebsocketConsumer):
             driver_phone = data['biker']
             price = data['price']
 
-            driver = DriverOnline.objects.filter(customer__login_account__username=dridriver_phonever).first()
+            driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first()
             shipment = Shipment(
                 driver = driver,
                 customer_ready = customer_ready,
