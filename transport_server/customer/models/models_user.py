@@ -20,3 +20,6 @@ class Customer(models.Model):
     
     def display_date_of_birth(self):
         return self.date_of_birth.strftime("%m/%d/%Y")
+    
+    def display_created_date(self):
+        return self.created_date.strftime("%m/%d/%Y")

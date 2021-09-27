@@ -99,13 +99,14 @@ class ChatConsumer(WebsocketConsumer):
                 'phone': phone,
                 'distance': distance,
                 'userDetail': {
-                    'accountUsername': driver_online.display_fullname(),
+                    'email': driver_online.customer.email,
                     'address': driver_online.customer.address,
-                    'dateOfBirth': driver_online.customer.display_date_of_birth(),
-                    'firstName': driver_online.customer.first_name,
-                    'gender': driver_online.customer.female,
-                    'lastName': driver_online.customer.last_name,
-                    'phoneNumber': phone
+                    'date_of_birth': driver_online.customer.display_date_of_birth(),
+                    'first_name': driver_online.customer.first_name,
+                    'female': driver_online.customer.female,
+                    'last_name': driver_online.customer.last_name,
+                    'phone_number': phone,
+                    'created_date': driver_online.customer.display_created_date(),
                 }
             }
             async_to_sync(self.channel_layer.group_send)(
