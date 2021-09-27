@@ -48,4 +48,4 @@ class Shipment(models.Model):
     is_finished = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.customer.first_name} - {self.customer_ready.customer.first_name}'
+        return f'{self.driver.first_name} - {self.customer_ready.customer.first_name}'
