@@ -164,8 +164,22 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
 
+        elif type == 'DELIVERY_BIKER_CHOSEN_EVENT':
+            token = text_data_json['message']['token']
+            customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
 
+            data = text_data_json['message']['data']
+            biker = data['biker']
+            price = data['price']
 
+            message = price
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
 
     # Receive message from room group
     def chat_message(self, event):
