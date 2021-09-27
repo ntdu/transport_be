@@ -39,7 +39,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         from rest_framework.authtoken.models import Token
-        from chat.models import CustomerReady, DestinationInfo, DriverOnline
+        from chat.models import CustomerReady, DestinationInfo, DriverOnline, Shipment
         from customer.models import Customer
         import haversine as hs
 
@@ -144,14 +144,20 @@ class ChatConsumer(WebsocketConsumer):
         elif type == 'DELIVERY_BIKER_CHOSEN_EVENT':
             token = text_data_json['message']['token']
             customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+            customer_ready = CustomerReady.objects.filter(customer=customer).order_by('-created_date').first()
 
             data = text_data_json['message']['data']
-            biker = data['biker']
+            driver_phone = data['biker']
             price = data['price']
 
+            driver = DriverOnline.objects.filter(customer__login_account__username=dridriver_phonever).first()
+            shipment = Shipment(
+                driver = driver,
+                customer_ready = customer_ready,
+                price = price
+            )
+            shipment.save()
 
-
-            
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
                 'data': price
