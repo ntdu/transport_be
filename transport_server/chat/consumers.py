@@ -47,6 +47,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
 
+        print(type)
         if type == 'CHAT':
             # Send message to room group
             message = text_data_json['message']
