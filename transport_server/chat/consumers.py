@@ -96,7 +96,8 @@ class ChatConsumer(WebsocketConsumer):
             distance = hs.haversine(loc_customer,loc_driver)
 
             message = {
-                'driverList': [
+                'type': 'DELIVERY_BOOKING',
+                'data': [
                     {
                         'phone': phone,
                         'distance': distance,
