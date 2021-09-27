@@ -40,3 +40,12 @@ class DriverOnline(models.Model):
     
     def display_fullname(self):
         return f'{self.customer.last_name} {self.customer.first_name}'
+
+class Shipment(models.Model):
+    driver = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer_ready = models.ForeignKey(CustomerReady, on_delete=models.CASCADE)
+    price = models.IntegerField()
+    is_finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.customer.first_name} - {self.customer_ready.customer.first_name}'
