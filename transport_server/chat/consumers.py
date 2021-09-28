@@ -74,12 +74,12 @@ class ChatConsumer(WebsocketConsumer):
                     },
                     'coordinates': {
                         'origin': {
-                            'lng': customer_ready.origin_lng,
-                            'lat': customer_ready.origin_lat
+                            'lng': float(customer_ready.origin_lng),
+                            'lat': float(customer_ready.origin_lat)
                         },
                         'destination': {
-                            'lng': destination_info.destination_lng,
-                            'lat': destination_info.destination_lat
+                            'lng': float(destination_info.destination_lng),
+                            'lat': float(destination_info.destination_lat)
                         }
                     },
                     'customer': {
