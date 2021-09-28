@@ -15,8 +15,9 @@
 
         
         chatSocket.onmessage = function(e) {
+            console.log(e)
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            document.querySelector('#chat-log').value += (data.message.data + '\n');
             document.querySelector('#chat-log').disabled = false;
             document.querySelector('#chat-message-input').disabled = false;
             document.querySelector('#chat-message-submit').disabled = false;
