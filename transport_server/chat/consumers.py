@@ -48,6 +48,48 @@ class ChatConsumer(WebsocketConsumer):
         type = text_data_json['type']
 
         if type == 'CHAT':
+            customer = Customer.objects.filter(login_account__username='0354471333').first()
+            customer_ready = CustomerReady.objects.filter(customer=customer).order_by('-created_date').first()
+
+            # data = text_data_json['message']['data']
+            driver_phone = '0354471332'
+            price = '50000'
+
+            driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
+            # shipment = Shipment(
+            #     driver = driver,
+            #     customer_ready = customer_ready,
+            #     price = price
+            # )
+            # shipment.save()
+
+            destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            message = {
+                'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
+                'data': {
+                    'biker': 1,
+                    'address': {
+                        'origin': customer_ready.origin_address,
+                        'destination': destination_info.destination_address
+                    },
+                    'coordinates': {
+                        'origin': {
+                            'lng': customer_ready.origin_lng,
+                            'lat': customer_ready.origin_lat
+                        },
+                        'destination': {
+                            'lng': destination_info.destination_lng,
+                            'lat': destination_info.destination_lat
+                        }
+                    },
+                    'customer': {
+                        'id': customer.id,
+                        'account__username': customer.display_fullname(),
+                        'phone_number': customer.login_account.username
+                    },
+                    'rideHash': 'abx',
+                }
+            }
 
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
@@ -170,9 +212,32 @@ class ChatConsumer(WebsocketConsumer):
             )
             shipment.save()
 
+            destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
-                'data': price
+                'data': {
+                    'biker': 1,
+                    'address': {
+                        'origin': customer_ready.origin_address,
+                        'destination': destination_info.destination_address
+                    },
+                    'coordinates': {
+                        'origin': {
+                            'lng': customer_ready.origin_lng,
+                            'lat': customer_ready.origin_lat
+                        },
+                        'destination': {
+                            'lng': destination_info.destination_lng,
+                            'lat': destination_info.destination_lat
+                        }
+                    },
+                    'customer': {
+                        'id': customer.id,
+                        'account__username': customer.display_fullname(),
+                        'phone_number': customer.login_account.username
+                    },
+                    'rideHash': 'abx',
+                }
             }
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,

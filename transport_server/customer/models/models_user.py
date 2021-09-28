@@ -23,3 +23,6 @@ class Customer(models.Model):
     
     def display_created_date(self):
         return self.created_date.strftime("%m/%d/%Y")
+    
+    def display_fullname(self):
+        return f'{self.last_name} {self.first_name}'
