@@ -47,8 +47,20 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
 
-        print(type)
         if type == 'CHAT':
+
+            message = {
+                'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
+                'data': 'price'
+            }
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+
             # Send message to room group
             message = text_data_json['message']
             async_to_sync(self.channel_layer.group_send)(
