@@ -91,10 +91,10 @@ class ChatConsumer(WebsocketConsumer):
                 }
             }
 
-            message = {
-                'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
-                'data': 'price'
-            }
+            # message = {
+            #     'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
+            #     'data': 'price'
+            # }
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
