@@ -39,7 +39,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         from rest_framework.authtoken.models import Token
-        from chat.models import CustomerReady, DestinationInfo, DriverOnline, Shipment
+        from chat.models import CustomerReady, DestinationInfo, DriverOnline, Shipment, StatusShipment
         from customer.models import Customer
         import haversine as hs
 
@@ -293,6 +293,30 @@ class ChatConsumer(WebsocketConsumer):
             message = {
                 'type': 'BIKER_WAITING_SUCCESS',
                 'data': 'Success'
+            }
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+        
+        elif type == 'DELIVERY_CONFIRMED_EVENT':
+            token = text_data_json['message']['token']
+            customer_phone = text_data_json['message']['data']['customer']
+
+            driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+            customer = Customer.objects.filter(login_account__username=customer_phone).first()
+
+            shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer, status=StatusShipment.WAIT_CONFIRM.value).first()
+            shipment.status = StatusShipment.WAIT_PICKUP.value
+            shipment.save()
+
+            message = {
+                'type': 'DELIVERY_CONFIRMED_EVENT',
+                'data': shipment.id
             }
 
             async_to_sync(self.channel_layer.group_send)(
