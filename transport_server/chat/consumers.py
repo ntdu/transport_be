@@ -67,27 +67,38 @@ class ChatConsumer(WebsocketConsumer):
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
                 'data': {
-                    'biker': 1,
+                    'coordinates': {
+                        'origin': {
+                            'lng': customer_ready.origin_lng,
+                            'lat': customer_ready.origin_lat
+                        },
+                        'destination': {
+                            'lng': destination_info.destination_lng,
+                            'lat': destination_info.destination_lat
+                        }
+                    },
                     'address': {
                         'origin': customer_ready.origin_address,
                         'destination': destination_info.destination_address
                     },
-                    'coordinates': {
-                        'origin': {
-                            'lng': float(customer_ready.origin_lng),
-                            'lat': float(customer_ready.origin_lat)
-                        },
-                        'destination': {
-                            'lng': float(destination_info.destination_lng),
-                            'lat': float(destination_info.destination_lat)
-                        }
+                    'sender': {
+                        'phone_number': customer.login_account.username,
+                        'email': customer.email,
+                        'first_name': customer.first_name,
+                        'last_name': customer.last_name,
+                        'female': customer.female,
+                        'date_of_birth': customer.display_date_of_birth,
+                        'created_date': customer.display_created_date
                     },
-                    'customer': {
-                        'id': customer.id,
-                        'account__username': customer.display_fullname(),
-                        'phone_number': customer.login_account.username
+                    'receiver': {
+                        'phone': destination_info.phone,
+                        'name': destination_info.name
                     },
-                    'rideHash': 'abx',
+                    'price': price,
+                    'deliveryHash': 'adfafdb',
+                    'package': {
+                        'weight': destination_info.weight,
+                    }
                 }
             }
 
@@ -216,11 +227,6 @@ class ChatConsumer(WebsocketConsumer):
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
                 'data': {
-                    'biker': 1,
-                    'address': {
-                        'origin': customer_ready.origin_address,
-                        'destination': destination_info.destination_address
-                    },
                     'coordinates': {
                         'origin': {
                             'lng': customer_ready.origin_lng,
@@ -231,12 +237,28 @@ class ChatConsumer(WebsocketConsumer):
                             'lat': destination_info.destination_lat
                         }
                     },
-                    'customer': {
-                        'id': customer.id,
-                        'account__username': customer.display_fullname(),
-                        'phone_number': customer.login_account.username
+                    'address': {
+                        'origin': customer_ready.origin_address,
+                        'destination': destination_info.destination_address
                     },
-                    'rideHash': 'abx',
+                    'sender': {
+                        'phone_number': customer.login_account.username,
+                        'email': customer.email,
+                        'first_name': customer.first_name,
+                        'last_name': customer.last_name,
+                        'female': customer.female,
+                        'date_of_birth': customer.display_date_of_birth,
+                        'created_date': customer.display_created_date
+                    },
+                    'receiver': {
+                        'phone': destination_info.phone,
+                        'name': destination_info.name
+                    },
+                    'price': price,
+                    'deliveryHash': 'adfafdb',
+                    'package': {
+                        'weight': destination_info.weight,
+                    }
                 }
             }
             async_to_sync(self.channel_layer.group_send)(
