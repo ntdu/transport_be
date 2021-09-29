@@ -309,9 +309,7 @@ class ChatConsumer(WebsocketConsumer):
 
             driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
             customer = Customer.objects.filter(login_account__username=customer_phone).first()
-            print(driver)
-            print(customer)
-            
+
             # shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer, status=StatusShipment.WAIT_CONFIRM.value).first()
             shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer).first()
             shipment.status = StatusShipment.WAIT_PICKUP.value
@@ -320,6 +318,24 @@ class ChatConsumer(WebsocketConsumer):
             message = {
                 'type': 'DELIVERY_CONFIRMED_EVENT',
                 'data': shipment.id
+            }
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+        
+        elif type == 'EMIT_DELIVERY_BIKER_WAITING':
+            token = text_data_json['message']['token']
+
+            driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+
+            message = {
+                'type': 'EMIT_DELIVERY_BIKER_WAITING',
+                'data': 'Tao đến r'
             }
 
             async_to_sync(self.channel_layer.group_send)(
