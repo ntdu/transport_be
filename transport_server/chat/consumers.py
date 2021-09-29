@@ -87,8 +87,8 @@ class ChatConsumer(WebsocketConsumer):
                         'first_name': customer.first_name,
                         'last_name': customer.last_name,
                         'female': customer.female,
-                        'date_of_birth': customer.display_date_of_birth,
-                        'created_date': customer.display_created_date
+                        'date_of_birth': customer.display_date_of_birth(),
+                        'created_date': customer.display_created_date()
                     },
                     'receiver': {
                         'phone': destination_info.phone,
