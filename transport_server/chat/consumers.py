@@ -309,7 +309,9 @@ class ChatConsumer(WebsocketConsumer):
 
             driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
             customer = Customer.objects.filter(login_account__username=customer_phone).first()
-
+            print(driver)
+            print(customer)
+            
             shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer, status=StatusShipment.WAIT_CONFIRM.value).first()
             shipment.status = StatusShipment.WAIT_PICKUP.value
             shipment.save()
