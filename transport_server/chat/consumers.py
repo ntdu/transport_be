@@ -312,7 +312,8 @@ class ChatConsumer(WebsocketConsumer):
             print(driver)
             print(customer)
             
-            shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer, status=StatusShipment.WAIT_CONFIRM.value).first()
+            # shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer, status=StatusShipment.WAIT_CONFIRM.value).first()
+            shipment = Shipment.objects.filter(driver=driver, customer_ready__customer=customer).first()
             shipment.status = StatusShipment.WAIT_PICKUP.value
             shipment.save()
 
