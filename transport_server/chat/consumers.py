@@ -69,12 +69,12 @@ class ChatConsumer(WebsocketConsumer):
                 'data': {
                     'coordinates': {
                         'origin': {
-                            'lng': customer_ready.origin_lng,
-                            'lat': customer_ready.origin_lat
+                            'lng': float(customer_ready.origin_lng),
+                            'lat': float(customer_ready.origin_lat)
                         },
                         'destination': {
-                            'lng': destination_info.destination_lng,
-                            'lat': destination_info.destination_lat
+                            'lng': float(destination_info.destination_lng),
+                            'lat': float(destination_info.destination_lat)
                         }
                     },
                     'address': {
@@ -97,7 +97,7 @@ class ChatConsumer(WebsocketConsumer):
                     'price': price,
                     'deliveryHash': 'adfafdb',
                     'package': {
-                        'weight': destination_info.weight,
+                        'weight': float(destination_info.weight),
                     }
                 }
             }
