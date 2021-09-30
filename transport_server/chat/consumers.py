@@ -269,6 +269,7 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
 
+        """ DRIVER """
         elif type == 'BIKER_WAITING':
             token = text_data_json['message']['token']
             customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
@@ -359,6 +360,29 @@ class ChatConsumer(WebsocketConsumer):
             message = {
                 'type': 'BIKER_RECEIVED_PACKAGE',
                 'data': 'Đã nhận hàng'
+            }
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+        
+        elif type == 'DELIVERY_COMPLETE_EVENT':
+            token = text_data_json['message']['token']
+            data = text_data_json['message']['data']
+
+            deliveryHash = data['deliveryHash']
+            deliverySuccessProof = data['deliverySuccessProof']
+
+            print(deliveryHash)
+            driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+
+            message = {
+                'type': 'DELIVERY_COMPLETE_EVENT',
+                'data': 'Hoàn tất giao hàng'
             }
 
             async_to_sync(self.channel_layer.group_send)(
