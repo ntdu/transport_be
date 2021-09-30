@@ -330,7 +330,7 @@ class ChatConsumer(WebsocketConsumer):
         
         elif type == 'DELIVERY_BIKER_WAITING':
             token = text_data_json['message']['token']
-
+            print(token)
             driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
 
             message = {
@@ -348,7 +348,12 @@ class ChatConsumer(WebsocketConsumer):
         
         elif type == 'BIKER_RECEIVED_PACKAGE':
             token = text_data_json['message']['token']
+            data = text_data_json['message']['data']
 
+            deliveryHash = data['deliveryHash']
+            bikerReceivedPackageProof = data['bikerReceivedPackageProof']
+
+            print(deliveryHash)
             driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
 
             message = {
