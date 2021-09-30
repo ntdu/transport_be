@@ -328,14 +328,32 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
         
-        elif type == 'EMIT_DELIVERY_BIKER_WAITING':
+        elif type == 'DELIVERY_BIKER_WAITING':
             token = text_data_json['message']['token']
 
             driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
 
             message = {
-                'type': 'EMIT_DELIVERY_BIKER_WAITING',
+                'type': 'DELIVERY_BIKER_WAITING',
                 'data': 'Tao đến r'
+            }
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+        
+        elif type == 'BIKER_RECEIVED_PACKAGE':
+            token = text_data_json['message']['token']
+
+            driver = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
+
+            message = {
+                'type': 'BIKER_RECEIVED_PACKAGE',
+                'data': 'Đã nhận hàng'
             }
 
             async_to_sync(self.channel_layer.group_send)(
