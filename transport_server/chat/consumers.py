@@ -269,7 +269,6 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
 
-        """ DRIVER """
         elif type == 'BIKER_WAITING':
             token = text_data_json['message']['token']
             customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
