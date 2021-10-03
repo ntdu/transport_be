@@ -55,7 +55,7 @@ class ChatConsumer(WebsocketConsumer):
             driver_phone = '0354471332'
             price = '50000'
 
-            driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
+            # driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
             # shipment = Shipment(
             #     driver = driver,
             #     customer_ready = customer_ready,
@@ -63,39 +63,39 @@ class ChatConsumer(WebsocketConsumer):
             # )
             # shipment.save()
 
-            destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination = []
+            for destination_info in list_destination_info:
+                list_destination.append({
+                    'phoneNumber': destination_info.phone,
+                    'name': destination_info.name,
+                    'destinationLng': float(destination_info.destination_lng),
+                    'destinationlLat': float(destination_info.destination_lat),
+                    'address': destination_info.destination_address
+                })
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
                 'data': {
-                    'coordinates': {
+                    'originAndDestiationInfo': {
                         'origin': {
-                            'lng': float(customer_ready.origin_lng),
-                            'lat': float(customer_ready.origin_lat)
+                            'sender': {
+                                'accountUsername': customer.login_account.username,
+                                'address': customer.address,
+                                'dateOfBirth': customer.display_date_of_birth(),
+                                'firstName': customer.first_name,
+                                'gender': customer.female,
+                                'lastName': customer.last_name,
+                                'phoneNumber': customer.login_account.username,
+                                'createdDate': customer.display_created_date()
+                            },
+                            'originalLng': float(customer_ready.origin_lng),
+                            'originalLat': float(customer_ready.origin_lat),
+                            'address': customer_ready.origin_address
                         },
-                        'destination': {
-                            'lng': float(destination_info.destination_lng),
-                            'lat': float(destination_info.destination_lat)
-                        }
-                    },
-                    'address': {
-                        'origin': customer_ready.origin_address,
-                        'destination': destination_info.destination_address
-                    },
-                    'sender': {
-                        'phone_number': customer.login_account.username,
-                        'email': customer.email,
-                        'first_name': customer.first_name,
-                        'last_name': customer.last_name,
-                        'female': customer.female,
-                        'date_of_birth': customer.display_date_of_birth(),
-                        'created_date': customer.display_created_date()
-                    },
-                    'receiver': {
-                        'phone': destination_info.phone,
-                        'name': destination_info.name
+                        'list_destination': list_destination,
                     },
                     'price': price,
-                    'deliveryHash': 'adfafdb',
+                    'rideHash': 'adfafdb',
                     'package': {
                         'weight': float(destination_info.weight),
                     }
@@ -240,39 +240,72 @@ class ChatConsumer(WebsocketConsumer):
             )
             shipment.save()
 
-            destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination = []
+            for destination_info in list_destination_info:
+                list_destination.append({
+                    'phoneNumber': destination_info.phone,
+                    'name': destination_info.name,
+                    'destinationLng': float(destination_info.destination_lng),
+                    'destinationlLat': float(destination_info.destination_lat),
+                    'address': destination_info.destination_address
+                })
             message = {
                 'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
                 'data': {
-                    'coordinates': {
+                    # 'coordinates': {
+                    #     'origin': {
+                    #         'lng': float(customer_ready.origin_lng),
+                    #         'lat': float(customer_ready.origin_lat)
+                    #     },
+                    #     'destination': {
+                    #         'lng': float(destination_info.destination_lng),
+                    #         'lat': float(destination_info.destination_lat)
+                    #     }
+                    # },
+                    # 'address': {
+                    #     'origin': customer_ready.origin_address,
+                    #     'destination': destination_info.destination_address
+                    # },
+                    # 'sender': {
+                    #     'phone_number': customer.login_account.username,
+                    #     'email': customer.email,
+                    #     'first_name': customer.first_name,
+                    #     'last_name': customer.last_name,
+                    #     'female': customer.female,
+                    #     'date_of_birth': customer.display_date_of_birth(),
+                    #     'created_date': customer.display_created_date()
+                    # },
+                    # 'receiver': {
+                    #     'phone': destination_info.phone,
+                    #     'name': destination_info.name
+                    # },
+                    # 'price': price,
+                    # 'deliveryHash': 'adfafdb',
+                    # 'package': {
+                    #     'weight': float(destination_info.weight),
+                    # }
+
+                    'originAndDestiationInfo': {
                         'origin': {
-                            'lng': float(customer_ready.origin_lng),
-                            'lat': float(customer_ready.origin_lat)
+                            'sender': {
+                                'accountUsername': customer.login_account.username,
+                                'address': customer.address,
+                                'dateOfBirth': customer.display_date_of_birth(),
+                                'firstName': customer.first_name,
+                                'gender': customer.female,
+                                'lastName': customer.last_name,
+                                'phoneNumber': customer.login_account.username,
+                                'createdDate': customer.display_created_date()
+                            },
+                            'originalLng': float(customer_ready.origin_lng),
+                            'originalLat': float(customer_ready.origin_lat),
+                            'address': customer_ready.origin_address
                         },
-                        'destination': {
-                            'lng': float(destination_info.destination_lng),
-                            'lat': float(destination_info.destination_lat)
-                        }
-                    },
-                    'address': {
-                        'origin': customer_ready.origin_address,
-                        'destination': destination_info.destination_address
-                    },
-                    'sender': {
-                        'phone_number': customer.login_account.username,
-                        'email': customer.email,
-                        'first_name': customer.first_name,
-                        'last_name': customer.last_name,
-                        'female': customer.female,
-                        'date_of_birth': customer.display_date_of_birth(),
-                        'created_date': customer.display_created_date()
-                    },
-                    'receiver': {
-                        'phone': destination_info.phone,
-                        'name': destination_info.name
+                        'list_destination': list_destination,
                     },
                     'price': price,
-                    'deliveryHash': 'adfafdb',
+                    'rideHash': 'adfafdb',
                     'package': {
                         'weight': float(destination_info.weight),
                     }
