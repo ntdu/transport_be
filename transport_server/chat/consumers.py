@@ -128,17 +128,13 @@ class ChatConsumer(WebsocketConsumer):
             token = text_data_json['message']['token']
             customer = Customer.objects.filter(login_account=Token.objects.get(key=token).user).first()
             
-            data = text_data_json['message']['data']
-            origin_lng = data['coordinates']['origin']['lng']
-            origin_lat = data['coordinates']['origin']['lat']
-            origin_address = data['address']['origin']
+            packageInfor = text_data_json['message']['data']['packageInfor']
+
+            origin_lng = packageInfor['originAndDestiationInfo']['origin']['originalLng']
+            origin_lat = packageInfor['originAndDestiationInfo']['origin']['originalLat']
+            origin_address = packageInfor['originAndDestiationInfo']['origin']['address']
             
-            phone = data['receiver']['phone']
-            name = data['receiver']['name']
-            destination_lng = data['coordinates']['destination']['lng']
-            destination_lat = data['coordinates']['destination']['lat']
-            destination_address = data['address']['destination']
-            weight = data['package']['weight']
+            weight = packageInfor['weight']
 
             customer_ready = CustomerReady(
                 customer = customer,
@@ -148,16 +144,24 @@ class ChatConsumer(WebsocketConsumer):
             )
             customer_ready.save()
 
-            destination_info = DestinationInfo(
-                customer_ready = customer_ready,
-                phone = phone,
-                name = name,
-                destination_lng = destination_lng,
-                destination_lat = destination_lat,
-                destination_address = destination_address,
-                weight = weight
-            )
-            destination_info.save()
+            list_destination = packageInfor['originAndDestiationInfo']['list_destination']
+            for item in list_destination:
+                phone = item['phoneNumber']
+                name = item['name']
+                destination_lng = item['destinationLng']
+                destination_lat = item['destinationLat']
+                destination_address = item['address']
+
+                destination_info = DestinationInfo(
+                    customer_ready = customer_ready,
+                    phone = phone,
+                    name = name,
+                    destination_lng = destination_lng,
+                    destination_lat = destination_lat,
+                    destination_address = destination_address,
+                    weight = weight
+                )
+                destination_info.save()
 
             driver_online = DriverOnline.objects.all().first()
 
@@ -166,24 +170,36 @@ class ChatConsumer(WebsocketConsumer):
             loc_driver = (driver_online.longitude, driver_online.latitude)
             distance = hs.haversine(loc_customer,loc_driver)
 
+            packageInfor['originAndDestiationInfo']['origin']['sender'] = {
+                'accountUsername': phone,
+                'address': driver_online.customer.address,
+                'dateOfBirth': driver_online.customer.display_date_of_birth(),
+                'firstName': driver_online.customer.first_name,
+                'gender': driver_online.customer.female,
+                'lastName': driver_online.customer.last_name,
+                'phoneNumber': phone,
+                'createdDate': driver_online.customer.display_created_date()
+            }
+
             message = {
                 'type': 'DELIVERY_BOOKING',
-                'data': [
-                    {
-                        'phone': phone,
-                        'distance': distance,
-                        'userDetail': {
-                            'email': driver_online.customer.email,
-                            'address': driver_online.customer.address,
-                            'date_of_birth': driver_online.customer.display_date_of_birth(),
-                            'first_name': driver_online.customer.first_name,
-                            'female': driver_online.customer.female,
-                            'last_name': driver_online.customer.last_name,
-                            'phone_number': phone,
-                            'created_date': driver_online.customer.display_created_date(),
-                        }
-                    }
-                ]
+                'data': packageInfor
+                # [
+                #     {
+                #         'phone': phone,
+                #         'distance': distance,
+                #         'userDetail': {
+                #             'email': driver_online.customer.email,
+                #             'address': driver_online.customer.address,
+                #             'date_of_birth': driver_online.customer.display_date_of_birth(),
+                #             'first_name': driver_online.customer.first_name,
+                #             'female': driver_online.customer.female,
+                #             'last_name': driver_online.customer.last_name,
+                #             'phone_number': phone,
+                #             'created_date': driver_online.customer.display_created_date(),
+                #         }
+                #     }
+                # ]
             }  
 
             async_to_sync(self.channel_layer.group_send)(
