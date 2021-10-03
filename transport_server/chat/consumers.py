@@ -63,7 +63,7 @@ class ChatConsumer(WebsocketConsumer):
             # )
             # shipment.save()
 
-            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready)
             list_destination = []
             for destination_info in list_destination_info:
                 list_destination.append({
@@ -240,7 +240,7 @@ class ChatConsumer(WebsocketConsumer):
             )
             shipment.save()
 
-            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready).first()
+            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready)
             list_destination = []
             for destination_info in list_destination_info:
                 list_destination.append({
