@@ -95,7 +95,7 @@ class ChatConsumer(WebsocketConsumer):
                         'list_destination': list_destination,
                     },
                     'price': price,
-                    'rideHash': 'adfafdb',
+                    'rideHash': 'N9TT-9G0A-B7FQ-RANC',
                     'package': {
                         'weight': float(destination_info.weight),
                     }
