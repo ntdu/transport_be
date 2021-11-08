@@ -85,6 +85,7 @@ class Shipment(models.Model):
     price = models.IntegerField()
 
     status = models.IntegerField(default=1, choices=StatusShipment.choices())
+    created_date = models.DateTimeField(default=tz.now)
 
     def __str__(self):
         return f'{self.driver.first_name} - {self.customer_ready.customer.first_name}'
