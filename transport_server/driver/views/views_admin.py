@@ -102,15 +102,15 @@ def activateCustomer(request):
             is_deleted=False, login_account__username=login_account__username).first()
 
         if not customer:
-            return ApiHelper.Response_info("Không tìm thấy tài khoản")
+            return ApiHelper.response_info("Không tìm thấy tài khoản")
 
         customer.is_active = True
         customer.save()
 
-        return ApiHelper.Response_ok("Success")
+        return ApiHelper.response_ok("Success")
     except Exception as e:
         print(e)
-        return ApiHelper.Response_error(e)
+        return ApiHelper.response_error(e)
 
 
 @api_view(['POST'])
