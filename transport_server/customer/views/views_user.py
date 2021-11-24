@@ -24,9 +24,12 @@ def register(request):
         dateOfBirth = dt_class.strptime(form['dateOfBirth'], '%Y-%m-%d')
         address = form['address']
 
-        user = User.objects.create_user(username=phoneNumber, email=email, password=password)
-        user.save()
-
+        try:
+            user = User.objects.create_user(username=phoneNumber, email=email, password=password)
+            user.save()
+        except:
+            return ApiHelper.response_client_error('phoneNumber was exist')
+    
         customer = Customer(
             login_account=user,
             email=email,
