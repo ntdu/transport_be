@@ -110,7 +110,7 @@ def activateCustomer(request):
         return ApiHelper.Response_ok("Success")
     except Exception as e:
         print(e)
-        return ApiHelper.Response_error()
+        return ApiHelper.Response_error(e)
 
 
 @api_view(['POST'])
