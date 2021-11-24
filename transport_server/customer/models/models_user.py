@@ -13,6 +13,10 @@ class Customer(models.Model):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     
+    # is_biker = models.BooleanField(default=True)
+    # last_longitude = models.DecimalField(default=0, max_digits=9, decimal_places=6, null=True, blank=True) 
+    # last_latitude = models.DecimalField(default=0, max_digits=9, decimal_places=6, null=True, blank=True)
+    
     created_date = models.DateTimeField(default=tz.now)
     
     def __str__(self):
