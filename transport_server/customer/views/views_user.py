@@ -28,7 +28,7 @@ def register(request):
             user = User.objects.create_user(username=phoneNumber, email=email, password=password)
             user.save()
         except:
-            return ApiHelper.response_client_error('phoneNumber was exist')
+            return ApiHelper.response_client_error('phoneNumber exists')
     
         customer = Customer(
             login_account=user,
