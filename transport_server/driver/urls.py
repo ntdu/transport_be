@@ -12,4 +12,6 @@ urlpatterns = [
   path('shipment-report-ten-days', views.shipmentReportTenDays, name='shipmentReportTenDays'),
   path('new-account-by-six-month', views.newAccountBySixMonth, name='newAccountBySixMonth'),
   path('get-top-account', views.getTopAccount, name='getTopAccount'),
+  path('list-shipment', views.listShipment, name='listShipment'),
+  path('get-des-shipment', views.getDesShipment, name='getDesShipment'),
 ]

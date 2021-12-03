@@ -8,7 +8,7 @@ from django.db.models import Sum, Q
 
 from apiHelper.apiHelper import ApiHelper
 from customer.models import Customer
-from chat.models import Shipment, StatusShipment
+from chat.models import Shipment, StatusShipment, DestinationInfo
 
 @api_view(['GET'])
 @authentication_classes([BasicAuthentication])
@@ -289,7 +289,7 @@ def getTopAccount(request):
             })
             list_account_shipment = sorted(list_account_shipment, key = lambda i: i['delivered_amount'], reverse=True)
 
-        return ApiHelper.response_ok(list_account_shipment)
+        return ApiHelper.response_ok(list_account_shipment[:3])
     except Exception as ex:
         print(ex)
         return ApiHelper.response_error()
@@ -316,3 +316,54 @@ def monthdelta(date, delta):
     if not m: m = 12
     return date.replace(day=1,month=m, year=y)
 
+
+@api_view(['GET'])
+@authentication_classes([BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def listShipment(request):
+    try:
+        list_shipment = Shipment.objects.all().order_by("-created_date")
+        list_result = []
+        for shipment in list_shipment:
+            if shipment.status == 1:
+                shipment.status = 3
+                shipment.save()
+                
+            list_result.append({
+                'id': shipment.id,
+                'driver_phone': shipment.driver.login_account.username,
+                'driver_fullname': shipment.driver.first_name + " " + shipment.driver.last_name,
+                'customer_phone': shipment.customer_ready.customer.login_account.username,
+                'customer_fullname': shipment.customer_ready.customer.first_name + " " + shipment.customer_ready.customer.last_name,
+                'price': shipment.price,
+                'status': StatusShipment.display(shipment.status),
+                'date': shipment.display_date()
+            })
+        
+        return ApiHelper.response_ok(list_result)
+    except Exception as e:
+        print(e)
+        return ApiHelper.response_error()
+    
+
+@api_view(['GET'])
+@authentication_classes([BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def getDesShipment(request):
+    try:
+        shipment_id = request.GET.get('shipment_id')
+        shipment = Shipment.objects.filter(id=shipment_id).first()
+        is_modify = shipment.status < StatusShipment.WAIT_PICKUP.value
+
+        list_des = list(DestinationInfo.objects.filter(customer_ready__id=shipment.customer_ready.id).values(
+            'name',
+            'phone'
+        ))
+
+        return ApiHelper.response_ok({
+            'is_modify': is_modify,
+            'list_des': list_des
+        })   
+    except Exception as e:
+        print(e)
+        return ApiHelper.response_error(e)

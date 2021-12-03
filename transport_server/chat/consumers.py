@@ -163,7 +163,7 @@ class ChatConsumer(WebsocketConsumer):
                 )
                 destination_info.save()
 
-            list_driver_online = DriverOnline.objects.all()
+            list_driver_online = DriverOnline.objects.all().first()
 
             list_data = []
             for driver_online in list_driver_online:

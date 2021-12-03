@@ -16,9 +16,9 @@ class StatusShipment(Enum):
     @classmethod
     def display(cls, value):
         if value == StatusShipment.WAIT_CONFIRM.value:
-            return 'Đợi tài xế xác nhận'
+            return 'Tài xế xác nhận'
         elif value == StatusShipment.WAIT_PICKUP.value:
-            return 'Đợi tài xế nhận hàng'
+            return 'Tài xế nhận hàng'
         elif value == StatusShipment.PROCESS.value:
             return 'Đang vận chuyển'
         elif value == StatusShipment.SUCCESSED.value:
@@ -34,8 +34,8 @@ class StatusShipment(Enum):
 
     @classmethod
     def parse(cls, value):
-        if value.lower() == 'đợi tài xế xác nhận': return StatusShipment.WAIT_CONFIRM.value
-        if value.lower() == 'đợi tài xế nhận hàng': return StatusShipment.WAIT_PICKUP.value
+        if value.lower() == 'tài xế xác nhận': return StatusShipment.WAIT_CONFIRM.value
+        if value.lower() == 'tài xế nhận hàng': return StatusShipment.WAIT_PICKUP.value
         if value.lower() == 'đang vận chuyển': return StatusShipment.PROCESS.value
         if value.lower() == 'đã giao hàng': return StatusShipment.SUCCESSED.value
         if value.lower() == 'đã bị hủy': return StatusShipment.CANCELLED.value
@@ -89,3 +89,6 @@ class Shipment(models.Model):
 
     def __str__(self):
         return f'{self.driver.first_name} - {self.customer_ready.customer.first_name}'
+
+    def display_date(self):
+        return f'{self.created_date.strftime("%m/%d/%Y, %H:%M:%S")}'
