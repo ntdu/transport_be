@@ -163,10 +163,10 @@ class ChatConsumer(WebsocketConsumer):
                 )
                 destination_info.save()
 
-            list_driver_online = DriverOnline.objects.all().first()
+            list_driver_online = DriverOnline.objects.all()
 
             list_data = []
-            for driver_online in list_driver_online:
+            for driver_online in list_driver_online[:1]:
                 phone = driver_online.customer.login_account.username
 
                 loc_customer = (origin_lng, origin_lat)
