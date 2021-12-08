@@ -156,6 +156,7 @@ class ChatConsumer(WebsocketConsumer):
 
                 des_location = (destination_lng, destination_lat)
                 total_distance += hs.haversine(pre_location, des_location)
+                pre_location = des_location
 
                 destination_info = DestinationInfo(
                     customer_ready = customer_ready,
