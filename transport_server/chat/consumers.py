@@ -176,7 +176,7 @@ class ChatConsumer(WebsocketConsumer):
 
                 list_data.append({
                     'phone': phone,
-                    'distance': hs.haversine((origin_lng, origin_lat), (driver_online.longitude, driver_online.latitude)),
+                    'distance': '{:.4f}'.format(hs.haversine((origin_lng, origin_lat), (driver_online.longitude, driver_online.latitude))),
                     'price': total_distance * 2000,
                     'userDetail': {
                         'email': driver_online.customer.email,
