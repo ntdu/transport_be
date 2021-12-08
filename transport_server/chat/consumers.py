@@ -145,12 +145,17 @@ class ChatConsumer(WebsocketConsumer):
             customer_ready.save()
 
             list_destination = packageInfor['originAndDestiationInfo']['list_destination']
+            distance = 0
+            pre_location = (origin_lng, origin_lat)
             for item in list_destination:
                 phone = item['phoneNumber']
                 name = item['name']
                 destination_lng = item['destinationLng']
                 destination_lat = item['destinationLat']
                 destination_address = item['address']
+
+                des_location = (destination_lng, destination_lat)
+                distance += hs.haversine(pre_location, des_location)
 
                 destination_info = DestinationInfo(
                     customer_ready = customer_ready,
@@ -169,10 +174,6 @@ class ChatConsumer(WebsocketConsumer):
             for driver_online in list_driver_online[:1]:
                 phone = driver_online.customer.login_account.username
 
-                loc_customer = (origin_lng, origin_lat)
-                loc_driver = (driver_online.longitude, driver_online.latitude)
-                distance = hs.haversine(loc_customer,loc_driver)
-
                 list_data.append({
                     'phone': phone,
                     'distance': distance,
@@ -187,16 +188,6 @@ class ChatConsumer(WebsocketConsumer):
                         'created_date': driver_online.customer.display_created_date(),
                     }
                 })
-            # packageInfor['originAndDestiationInfo']['origin']['sender'] = {
-            #     'accountUsername': phone,
-            #     'address': driver_online.customer.address,
-            #     'dateOfBirth': driver_online.customer.display_date_of_birth(),
-            #     'firstName': driver_online.customer.first_name,
-            #     'gender': driver_online.customer.female,
-            #     'lastName': driver_online.customer.last_name,
-            #     'phoneNumber': phone,
-            #     'createdDate': driver_online.customer.display_created_date()
-            # }
 
             message = {
                 'type': 'DELIVERY_BOOKING',
@@ -210,18 +201,6 @@ class ChatConsumer(WebsocketConsumer):
                     'message': message
                 }
             )
-
-            # 'phone':
-            # 'distance':
-            # 'userDetail': {
-            #     'accountUsername'
-            #     'address'
-            #     'dateOfBirth'
-            #     'firstName'
-            #     'gender'
-            #     'lastName'
-            #     'phoneNumber'
-            # }
         
         elif type == 'DELIVERY_BIKER_CHOSEN_EVENT':
             token = text_data_json['message']['token']
