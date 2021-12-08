@@ -48,83 +48,83 @@ class ChatConsumer(WebsocketConsumer):
         type = text_data_json['type']
 
         if type == 'CHAT':
-            customer = Customer.objects.filter(login_account__username='0354471333').first()
-            customer_ready = CustomerReady.objects.filter(customer=customer).order_by('-created_date').first()
+            # customer = Customer.objects.filter(login_account__username='0354471333').first()
+            # customer_ready = CustomerReady.objects.filter(customer=customer).order_by('-created_date').first()
 
-            # data = text_data_json['message']['data']
-            driver_phone = '0354471332'
-            price = '50000'
+            # # data = text_data_json['message']['data']
+            # driver_phone = '0354471332'
+            # price = '50000'
 
-            # driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
-            # shipment = Shipment(
-            #     driver = driver,
-            #     customer_ready = customer_ready,
-            #     price = price
-            # )
-            # shipment.save()
+            # # driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
+            # # shipment = Shipment(
+            # #     driver = driver,
+            # #     customer_ready = customer_ready,
+            # #     price = price
+            # # )
+            # # shipment.save()
 
-            list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready)
-            list_destination = []
-            for destination_info in list_destination_info:
-                list_destination.append({
-                    'phoneNumber': destination_info.phone,
-                    'name': destination_info.name,
-                    'destinationLng': float(destination_info.destination_lng),
-                    'destinationlLat': float(destination_info.destination_lat),
-                    'address': destination_info.destination_address
-                })
-            message = {
-                'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
-                'data': {
-                    'originAndDestiationInfo': {
-                        'origin': {
-                            'sender': {
-                                'accountUsername': customer.login_account.username,
-                                'address': customer.address,
-                                'dateOfBirth': customer.display_date_of_birth(),
-                                'firstName': customer.first_name,
-                                'gender': customer.female,
-                                'lastName': customer.last_name,
-                                'phoneNumber': customer.login_account.username,
-                                'createdDate': customer.display_created_date()
-                            },
-                            'originalLng': float(customer_ready.origin_lng),
-                            'originalLat': float(customer_ready.origin_lat),
-                            'address': customer_ready.origin_address
-                        },
-                        'list_destination': list_destination,
-                    },
-                    'price': price,
-                    'rideHash': 'N9TT-9G0A-B7FQ-RANC',
-                    'package': {
-                        'weight': float(destination_info.weight),
-                    }
-                }
-            }
-
+            # list_destination_info = DestinationInfo.objects.filter(customer_ready=customer_ready)
+            # list_destination = []
+            # for destination_info in list_destination_info:
+            #     list_destination.append({
+            #         'phoneNumber': destination_info.phone,
+            #         'name': destination_info.name,
+            #         'destinationLng': float(destination_info.destination_lng),
+            #         'destinationlLat': float(destination_info.destination_lat),
+            #         'address': destination_info.destination_address
+            #     })
             # message = {
             #     'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
-            #     'data': 'price'
-            # }
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message
-                }
-            )
-            message = text_data_json['message']
-            # if message == 'DELIVERY_CONFIRMED_EVENT':
-            #     async_to_sync(self.channel_layer.group_send)(
-            #         self.room_group_name,
-            #         {
-            #             'type': 'chat_message',
-            #             'message': {
-            #                 'type': 'DELIVERY_CONFIRMED_EVENT',
-            #                 'data': ''
-            #             }
+            #     'data': {
+            #         'originAndDestiationInfo': {
+            #             'origin': {
+            #                 'sender': {
+            #                     'accountUsername': customer.login_account.username,
+            #                     'address': customer.address,
+            #                     'dateOfBirth': customer.display_date_of_birth(),
+            #                     'firstName': customer.first_name,
+            #                     'gender': customer.female,
+            #                     'lastName': customer.last_name,
+            #                     'phoneNumber': customer.login_account.username,
+            #                     'createdDate': customer.display_created_date()
+            #                 },
+            #                 'originalLng': float(customer_ready.origin_lng),
+            #                 'originalLat': float(customer_ready.origin_lat),
+            #                 'address': customer_ready.origin_address
+            #             },
+            #             'list_destination': list_destination,
+            #         },
+            #         'price': price,
+            #         'rideHash': 'N9TT-9G0A-B7FQ-RANC',
+            #         'package': {
+            #             'weight': float(destination_info.weight),
             #         }
-            #     )
+            #     }
+            # }
+
+            # # message = {
+            # #     'type': 'DELIVERY_BIKER_CHOSEN_EVENT',
+            # #     'data': 'price'
+            # # }
+            # async_to_sync(self.channel_layer.group_send)(
+            #     self.room_group_name,
+            #     {
+            #         'type': 'chat_message',
+            #         'message': message
+            #     }
+            # )
+            message = text_data_json['message']
+            if message == 'DELIVERY_CONFIRMED_EVENT':
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': {
+                            'type': 'DELIVERY_CONFIRMED_EVENT',
+                            'data': ''
+                        }
+                    }
+                )
             
             # Send message to room group
             async_to_sync(self.channel_layer.group_send)(
