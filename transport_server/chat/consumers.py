@@ -49,7 +49,7 @@ class ChatConsumer(WebsocketConsumer):
 
         if type == 'CHAT':
             message = text_data_json['message']
-            if message == 'DELIVERY_CONFIRMED_EVENT':
+            if message == 'DELIVERY_BIKER_CHOSEN_EVENT':
             
                 customer = Customer.objects.filter(login_account__username='0354471333').first()
                 customer_ready = CustomerReady.objects.filter(customer=customer).order_by('-created_date').first()
