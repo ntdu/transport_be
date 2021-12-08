@@ -145,7 +145,7 @@ class ChatConsumer(WebsocketConsumer):
             customer_ready.save()
 
             list_destination = packageInfor['originAndDestiationInfo']['list_destination']
-            distance = 0
+            total_distance = 0
             pre_location = (origin_lng, origin_lat)
             for item in list_destination:
                 phone = item['phoneNumber']
@@ -155,7 +155,7 @@ class ChatConsumer(WebsocketConsumer):
                 destination_address = item['address']
 
                 des_location = (destination_lng, destination_lat)
-                distance += hs.haversine(pre_location, des_location)
+                total_distance += hs.haversine(pre_location, des_location)
 
                 destination_info = DestinationInfo(
                     customer_ready = customer_ready,
@@ -176,7 +176,8 @@ class ChatConsumer(WebsocketConsumer):
 
                 list_data.append({
                     'phone': phone,
-                    'distance': distance,
+                    'distance': hs.haversine((origin_lng, origin_lat), (driver_online.longitude, driver_online.latitude)),
+                    'price': total_distance * 2000,
                     'userDetail': {
                         'email': driver_online.customer.email,
                         'address': driver_online.customer.address,
