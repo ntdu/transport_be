@@ -126,6 +126,42 @@ class ChatConsumer(WebsocketConsumer):
                     }
                 )
             
+            elif message == 'DELIVERY_BIKER_WAITING':
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': {
+                            'type': 'DELIVERY_BIKER_WAITING',
+                            'data': ''
+                        }
+                    }
+                )
+            
+            elif message == 'BIKER_RECEIVED_PACKAGE':
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': {
+                            'type': 'BIKER_RECEIVED_PACKAGE',
+                            'data': ''
+                        }
+                    }
+                )
+            
+            elif message == 'DELIVERY_COMPLETE_EVENT':
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': {
+                            'type': 'DELIVERY_COMPLETE_EVENT',
+                            'data': ''
+                        }
+                    }
+                )
+                     
             # Send message to room group
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
