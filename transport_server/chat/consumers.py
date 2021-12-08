@@ -155,7 +155,8 @@ class ChatConsumer(WebsocketConsumer):
                 destination_address = item['address']
 
                 des_location = (destination_lng, destination_lat)
-                total_distance = hs.haversine(pre_location, des_location)
+                # total_distance = hs.haversine(pre_location, des_location)
+                total_distance = destination_lng
                 pre_location = des_location
 
                 destination_info = DestinationInfo(
