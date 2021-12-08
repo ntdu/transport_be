@@ -56,7 +56,7 @@ class ChatConsumer(WebsocketConsumer):
 
                 # data = text_data_json['message']['data']
                 driver_phone = '0354471332'
-                price = '50000'
+                price = '48000'
 
                 # driver = DriverOnline.objects.filter(customer__login_account__username=driver_phone).first().customer
                 # shipment = Shipment(
