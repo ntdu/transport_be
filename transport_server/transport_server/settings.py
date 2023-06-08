@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'customer',
     'chat',
+    'notifications',
     'channels'
 ]
 
@@ -99,8 +100,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             # "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-            "hosts": [('dev.tnt-trading.vip', 6379)],
-            # "hosts": [("127.0.0.1", 6379)],
+            # "hosts": [('dev.tnt-trading.vip', 6379)],
+            "hosts": [("127.0.0.1", 6379)],
         },
     },
 }
@@ -141,10 +142,10 @@ CACHES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dc51muauvtg25i',
-        'USER': 'lfnjnvztyjrpud',
-        'PASSWORD': 'a199f68fe3ab19f29e8dc4b3479514c748c82d4a406b1ff9dd5b71716069425c',
-        'HOST': 'ec2-54-146-84-101.compute-1.amazonaws.com',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
